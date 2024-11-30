@@ -19,16 +19,13 @@ class Polynomial {
             termArray=new Term[capacity];
         }
         //輸入
-        void input(){
-            cout<<"輸入多項式(0作為結尾):\n";
-            while(1){
-                float coef;
-                int exp;
-                cin >> coef;
-                if (coef==0)break;
-                cin >> exp;
-                AddTerm(coef,exp);
-            }
+        float getCoef(int index) {
+            return termArray[index].coef;
+
+        }
+        float getExp(int index) {
+            return termArray[index].exp;
+
         }
         //加一個非零項
         void AddTerm(float coef,int exp){
@@ -103,23 +100,46 @@ class Polynomial {
             }
             cout<<'\n';
         }
+        friend istream& operator>>(istream& is, Polynomial& p) {
+            cout << "輸入多項式(0作為結尾) :\n";
+            while (1) {
+                float coef;
+                int exp;
+                cin >> coef;
+                if (coef == 0)break;
+                cin >> exp;
+                p.AddTerm(coef, exp);
+            }
+            return is;
+        }
+        friend ostream& operator<<(ostream& os, Polynomial &p) {
+            if (p.termCount == 0) {
+                os << "0";
+                return os;
+            }
+            for (int i = 0; i < p.termCount; i++) {
+                if (i > 0 && p.getCoef(i) > 0) {
+                    os << "+";
+                }
+                os << p.getCoef(i) << "X^" << p.getExp(i);
+            }
+            return os;
+        }
 };
 int main() {
     Polynomial poly_A, poly_B;
     cout << "輸入第一個多項式";
-    poly_A.input();
+    cin >> poly_A;
     cout << "輸入第二個多項式";
-    poly_B.input();
+    cin >> poly_B;
     cout << "第一個多項式為:";
-    poly_A.Print();
+    cout << poly_A<<'\n';
     cout << "第二個多項式為:";
-    poly_B.Print();
-    cout << "poly_A+poly_B=";
+    cout << poly_B<<'\n';
     Polynomial sum = poly_A.Add(poly_B);
-    sum.Print();
-    cout << "poly_A*poly_B=";
+    cout << "poly_A+poly_B="<<sum<<'\n';
     Polynomial pro = poly_A.Mult(poly_B);
-    pro.Print();
+    cout << "poly_A*poly_B="<<pro<<'\n';
     float x;
     cout << "輸入X=";
     cin >> x;
